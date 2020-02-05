@@ -12,6 +12,8 @@ class Shape(object):
         self.attributes["stroke-width"]=1
 
 
+    def set_fill(self, color="black"):
+        self.attributes["fill"]=color
     def add_attribute(self, attribute, value):
         self.attributes[attribute]=value
     
@@ -20,6 +22,17 @@ class Shape(object):
         for key, value in self.attributes.items():
             text+="{0}='{1}' ".format(key, value)
         return text
+
+    def get_left(self):
+        return None
+
+    def get_right(self):
+        return None
+
+    def get_top(self):
+        return None
+    def get_down(self):
+        return None
 
     def __str__(self):
         attributes=self.get_attributes()
@@ -35,10 +48,12 @@ class Shape(object):
 class CompoundShape(Shape):
     def __init__(self):
         self.shapes=[]
+        super().__init__()
 
     def add_shape(self, shape):
         self.shapes.append(shape)
     def __str__(self):
+        print(self.shapes)
         shapes= "\n".join(map(str, self.shapes))
         return shapes
 
@@ -78,7 +93,26 @@ class Circle(Shape):
         self.tag="circle"
         self.add_attribute("cx", x)
         self.add_attribute("cy", y)
-        self.add_attribute("radius", radius)
+        self.add_attribute("r", radius)
+
+    def get_left(self):
+        x=self.cx-self.radius
+        y=self.cy
+        return (x,y)
+
+    def get_right(self):
+        x=self.cx+self.radius
+        y=self.cy
+        return (x,y)
+
+    def get_top(self):
+        x=self.cx
+        y=self.cy-self.radius
+        return (x,y)
+    def get_down(self):
+        x=self.cx
+        y=self.cy-self.radius
+        return (x,y)
 
 class Text(Shape):
     def __init__(self, x, y, text):
@@ -94,10 +128,42 @@ class Rect(Shape):
     def __init__(self, x, y, height, width):
         super().__init__()
         self.tag="rect"
+        self.x=x
+        self.y=y
+        self.height=height
+        self.width=width
         self.add_attribute("x", x)
         self.add_attribute("y", y)
         self.add_attribute("height", height)
         self.add_attribute("width", width)
+    def get_left(self):
+        x=self.cx-self.radius
+        y=self.cy
+        return (x,y)
+
+    def get_right(self):
+        x=self.cx+self.radius
+        y=self.cy
+        return (x,y)
+
+    def get_top(self):
+        x=self.cx
+        y=self.cy-self.radius
+        return (x,y)
+    def get_down(self):
+        x=self.cx
+        y=self.cy-self.radius
+        return (x,y)
+
+
+class Line(Shape):
+    def __init__(self, x1, y1, x2, y2):
+        super().__init__()
+        self.tag="line"
+        self.add_attribute("x1", x1)
+        self.add_attribute("y1", y1)
+        self.add_attribute("x2", x2)
+        self.add_attribute("y2", y2)
         
 if __name__ == "__main__":
     c=Circle(20, 40, 20)
